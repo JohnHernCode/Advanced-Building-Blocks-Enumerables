@@ -1,7 +1,7 @@
 # Advanced Building Blocks Enumerables- Microverse Ruby Project #2
 
 This is the code for the Microverse Advanced Building Blocks Enumerables Project in the Microverse Ruby Course.
-The goal is to recreate the following Enumerables methods. 
+The goal is to recreate the following Enumerables methods.
 
 1. Each
 2. Each with Index
@@ -22,7 +22,7 @@ The goal is to recreate the following Enumerables methods.
 - Plain Ruby
 - Rubocop
 
-This project was built using plain ruby and its functions are to compare and swap items in an array. 
+This project was built using plain ruby and its functions are to compare and swap items in an array.
 
 ## Usage
 
@@ -45,6 +45,12 @@ Type `ruby main.rb` in terminal
 - GitHub: [johnhernandez-code](https://github.com/johnhernandez-code)
 - Twitter: [@JohnHernCode](https://twitter.com/JohnHernCode)
 - LinkedIn: [LinkedIn](https://www.linkedin.com/in/john-hernandez-56a7821b8/)
+
+👤 **Oever González**
+
+- GitHub: [@NoTengoBattery](https://github.com/NoTengoBattery)
+- Twitter: [@NoTengoBattery](https://twitter.com/NoTengoBattery)
+- LinkedIn: [Oever González](https://linkedin.com/in/NoTengoBattery)
 
 ## 🤝 Contributing
 
