@@ -66,6 +66,7 @@ module Enumerable
       elsif pattern == item
         return true
       end
+
     end
     false
   end
