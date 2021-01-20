@@ -1,8 +1,12 @@
+#!/usr/bin/env ruby
+
+require_relative '../enumerables'
+
 ARRAY_SIZE = 100
 LOWEST_VALUE = 0
 HIGHEST_VALUE = 9
 
-describe 'enumerables' do
+RSpec.describe 'enumerables' do
   let(:array) { Array.new(ARRAY_SIZE) { rand(LOWEST_VALUE...HIGHEST_VALUE) } }
   let(:block) { proc { |num| num < (LOWEST_VALUE + HIGHEST_VALUE) / 2 } }
   let(:words) { %w[dog door rod blade] }
