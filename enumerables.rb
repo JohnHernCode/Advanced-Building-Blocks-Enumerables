@@ -36,52 +36,55 @@ module Enumerable
     result
   end
 
-  def my_all?(arg = nil)
-    result = true
-    if block_given?
-      my_each { |e| result = false unless yield e }
-    elsif arg.is_a?(Class) && arg.class != Regexp
-      my_each { |e| result = false unless e.is_a?(arg) }
-    elsif arg.is_a?(Regexp)
-      my_each { |e| result = false unless e.match(arg) }
-    elsif arg.nil?
-      my_each { |e| result = false if e.nil? || e == false }
-    else
-      my_each { |e| result = false unless e == arg }
+  def my_all?(pattern = (pattern_not_defined = true))
+    my_each do |item|
+      if block_given?
+        return false unless yield(item)
+      elsif pattern_not_defined
+        return false unless item
+      elsif pattern.is_a?(Class)
+        return false unless item.is_a?(pattern)
+      elsif pattern.is_a?(Regexp)
+        return false unless pattern.match?(item)
+      else
+        return false unless pattern == item
+      end
     end
-    result
+    true
   end
 
-  def my_any?(arg = nil)
-    result = false
-    if block_given?
-      my_each { |e| result = true if yield e }
-    elsif arg.is_a?(Class) && arg.class != Regexp
-      my_each { |e| result = true if e.is_a?(arg) }
-    elsif arg.is_a?(Regexp)
-      my_each { |e| result = true if e.match(arg) }
-    elsif arg.nil?
-      my_each { |e| result = true unless e.nil? || e == false }
-    else
-      my_each { |e| result = true if e == arg }
+  def my_any?(pattern = (pattern_not_defined = true))
+    my_each do |item|
+      if block_given?
+        return true if yield(item)
+      elsif pattern_not_defined
+        return true if item
+      elsif pattern.is_a?(Class)
+        return true if item.is_a?(pattern)
+      elsif pattern.is_a?(Regexp)
+        return true if pattern.match?(item)
+      elsif pattern == item
+        return true
+      end
     end
-    result
+    false
   end
 
-  def my_none?(arg = nil)
-    result = true
-    if block_given?
-      my_each { |e| result = false if yield e }
-    elsif arg.is_a?(Class) && arg.class != Regexp
-      my_each { |e| result = false if e.is_a?(arg) }
-    elsif arg.is_a?(Regexp)
-      my_each { |e| result = false if e.match(arg) }
-    elsif arg.nil?
-      my_each { |e| result = false if e }
-    else
-      my_each { |e| result = false if e == arg }
+  def my_none?(pattern = (pattern_not_defined = true))
+    my_each do |item|
+      if block_given?
+        return false if yield(item)
+      elsif pattern_not_defined
+        return false if item
+      elsif pattern.is_a?(Class)
+        return false if item.is_a?(pattern)
+      elsif pattern.is_a?(Regexp)
+        return false if pattern.match?(item)
+      elsif pattern == item
+        return false
+      end
     end
-    result
+    true
   end
 
   def my_count(int = nil)
@@ -108,21 +111,21 @@ module Enumerable
     ary
   end
 
-  def my_inject(arg = nil, sym = nil)
-    if block_given?
-      result = arg unless arg.nil?
-      my_each { |e| result = result.nil? ? result = e : yield(result, e) }
-      result
-    elsif arg.is_a?(Symbol)
-      my_each { |e| result = result.nil? ? result = e : result.public_send(arg, e) }
-      result
-    elsif arg.is_a?(Numeric) && sym.is_a?(Symbol)
-      result = arg
-      my_each { |e| result = result.public_send sym, e }
-      result
-    else
-      my_each { |e| yield e }
+  def my_inject(*parameters)
+    # Parameter discrimination logic
+    if parameters.length == 1
+      parameters[0].is_a?(Symbol) ? (symbol = parameters[0]) : (accumulator = parameters[0])
+    elsif parameters.length > 1
+      accumulator = parameters[0]
+      symbol = parameters[1]
     end
+    temporary = accumulator.nil? ? drop(1) : drop(0)
+    accumulator = accumulator.nil? ? first(1)[0] : accumulator
+    # Implementation of the algorithm
+    temporary.my_each do |item|
+      accumulator = symbol.nil? ? yield(accumulator, item) : symbol.to_proc.call(accumulator, item)
+    end
+    accumulator
   end
 end
 
