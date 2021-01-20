@@ -19,18 +19,26 @@ The goal is to recreate the following Enumerables methods.
 
 ## Built With
 
-- Plain Ruby
+- Ruby
 - Rubocop
+- RSpec
 
-This project was built using plain ruby and its functions are to compare and swap items in an array.
+This project was built using Ruby and its functions are to compare and swap items in an array.
 
 ## Usage
 
+```sh
 git clone git@github.com:JohnHernCode/Advanced-Building-Blocks-Enumerables.git
-
 cd Advanced-Building-Blocks-Enumerables
+```
 
 Type `ruby main.rb` in terminal
+
+## Running the tests
+
+For running the tests, you need to install the `rspec` gem. Click [here](https://guides.rubygems.org/rubygems-basics/) to read more about gems and how to install them,
+
+After having a suitable version of RSpec, you can run the test by following the instructions on Usage, with the difference that you should type `rspec --force-color --format documentation` instead of `ruby main.rb`.
 
 ## Authors
 
@@ -40,7 +48,7 @@ Type `ruby main.rb` in terminal
 - Twitter: [@Gscarv13](https://twitter.com/Gscarv13)
 - LinkedIn: [Gustavo Carvalho](https://www.linkedin.com/in/gustavo-silva-de-carvalho-72998a156/)
 
-👤 **John hernandez**
+👤 **John Hernandez**
 
 - GitHub: [johnhernandez-code](https://github.com/johnhernandez-code)
 - Twitter: [@JohnHernCode](https://twitter.com/JohnHernCode)
