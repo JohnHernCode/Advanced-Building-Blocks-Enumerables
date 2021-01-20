@@ -2,7 +2,7 @@
 
 require_relative '../enumerables'
 
-ARRAY_SIZE = 10
+ARRAY_SIZE = 100
 LOWEST_VALUE = 0
 HIGHEST_VALUE = 9
 
@@ -30,9 +30,11 @@ RSpec.describe 'enumerables' do
   let(:hash) { { a: 1, b: 2, c: 3, d: 4, e: 5 } }
   let(:words) { %w[dog door rod blade] }
   let(:expected) { 'dog' }
+  let(:search) { proc { |memo, word| memo.length > word.length ? memo : word } }
   let(:false_array) { [nil, true, 99] }
   let(:true_array) { [1, 2i, 3.14] }
   let(:falsy_array) { [false, nil, false, false] }
+  let(:transformation) { proc { |n| n**4 } }
   describe '#my_each' do
     it 'loops trough an array and push elements to a new array' do
       array.my_each(&my_push_element)
@@ -207,6 +209,80 @@ RSpec.describe 'enumerables' do
       expect(array.my_none?).to be(false)
       expect(array.my_none?(nil)).to be(false)
       expect(array.my_none?(false)).to be(true)
+    end
+  end
+  describe '#my_count' do
+    it 'counts the elements equal to the argument' do
+      favorites = words.my_count(expected)
+      expect(favorites).to eq(1)
+    end
+    it 'returns the number of items when no block or argument is given' do
+      result = array.my_count
+      expect(result).to eq(ARRAY_SIZE)
+    end
+    it 'counts the elements which yield true when block is given' do
+      expect(array.my_count(&block)).to eq(array.count(&block))
+    end
+    it 'returns zero for the empty array' do
+      expect(results_array.my_count).to eq(0)
+    end
+  end
+  describe '#my_map' do
+    it 'returns a transformed array of numbers when block is given' do
+      result = array.my_map(&transformation)
+      expected = array.map(&transformation)
+      expect(result).to eq(expected)
+    end
+    it 'returns a transformed array of strings' do
+      result = words.my_map { |w| "i like #{w}" }
+      expected = words.map { |w| "i like #{w}" }
+      expect(result).to eq(expected)
+    end
+    it 'returns Enumerator when no block is given' do
+      result = array.map
+      expect(result).to be_a Enumerator
+    end
+    it 'returns a transformed array of numbers when proc is given' do
+      result = array.my_map(transformation)
+      expected = array.map(&transformation)
+      expect(result).to eq(expected)
+    end
+  end
+  describe '#my_inject' do
+    it 'reduces when block is given' do
+      result = array.my_inject { |sum, n| sum + n }
+      expected = array.reduce { |sum, n| sum + n }
+      expect(result).to eq(expected)
+    end
+    it 'reduces a array when no block, no initial and symbol is given' do
+      expect(array.my_inject(:+)).to eq(array.reduce(:+))
+    end
+    it 'reduces a range when no block, no initial and symbol is given' do
+      expect(range.my_inject(:+)).to eq(range.reduce(:+))
+    end
+    it 'reduces a array when no block, initial and symbol is given' do
+      expect(array.my_inject(100, :*)).to eq(array.reduce(100, :*))
+    end
+    it 'reduces a range when no block, initial and symbol is given' do
+      expect(range.my_inject(100, :*)).to eq(range.reduce(100, :*))
+    end
+    it 'reduces a array when block and initial' do
+      expect(array.my_inject(100) { |a, b| a << b }).to eq(array.reduce(100) { |a, b| a << b })
+    end
+    it 'reduces a range when block and initial' do
+      expect(range.my_inject(100) { |a, b| a << b }).to eq(range.reduce(100) { |a, b| a << b })
+    end
+    it 'finds the longest word' do
+      expect(words.my_inject(&search)).to eq(words.reduce(&search))
+    end
+    it 'raises a "LocalJumpError" when no block or argument is given' do
+      expect { range.my_inject }.to raise_error(LocalJumpError)
+    end
+  end
+  describe '#multiply_els' do
+    it 'multiplies all the elements in the array unsing #my_inject' do
+      correct = array.reduce { |product, n| product * n }
+      expect(multiply_els(array)).to eq(correct)
     end
   end
 end
